@@ -1,6 +1,6 @@
 import type { NextConfig } from "next";
 
-const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000/api/v1";
+const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
 // Derive the API origin so next/image can be pointed at backend-hosted assets if needed.
 const apiOrigin = (() => {
   try {
@@ -13,8 +13,6 @@ const apiOrigin = (() => {
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
-  // Antd v5 ships ESM that benefits from transpilation in the App Router.
-  transpilePackages: ["antd", "@ant-design/icons", "@ant-design/nextjs-registry"],
   images: {
     formats: ["image/avif", "image/webp"],
     remotePatterns: [
@@ -26,7 +24,7 @@ const nextConfig: NextConfig = {
     ],
   },
   experimental: {
-    optimizePackageImports: ["antd", "@ant-design/icons", "lucide-react", "recharts"],
+    optimizePackageImports: ["lucide-react", "recharts"],
   },
   async headers() {
     return [

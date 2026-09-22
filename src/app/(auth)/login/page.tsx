@@ -10,13 +10,22 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
+/** Only allow same-site relative paths as post-login destinations (no open redirect). */
+function safeCallback(url?: string): string {
+  const fallback = "/admin/dashboard";
+  if (!url || !url.startsWith("/") || url.startsWith("//")) return fallback;
+  return url;
+}
+
 export default async function LoginPage({
   searchParams,
 }: {
   searchParams: Promise<{ callbackUrl?: string; error?: string }>;
 }) {
   const session = await auth();
-  const { callbackUrl = "/admin/dashboard", error } = await searchParams;
+  const params = await searchParams;
+  const callbackUrl = safeCallback(params.callbackUrl);
+  const error = params.error;
 
   // Already signed in → skip the form.
   if (session?.user) redirect(callbackUrl);
