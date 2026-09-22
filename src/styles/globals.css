@@ -1,0 +1,204 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+@import "tw-animate-css";
+
+/* Dark mode driven by a `.dark` class on <html> (managed by next-themes). */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
+  Design tokens — editorial aesthetic (Medium × Vercel blog).
+  Fonts are wired via next/font in app/layout.tsx and exposed as CSS variables:
+    --font-serif  → Playfair Display (headings)
+    --font-sans   → Inter (body)
+    --font-mono   → JetBrains Mono (code)
+*/
+@theme inline {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-playfair), ui-serif, Georgia, serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, "SF Mono", monospace;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-accent: var(--accent);
+  --color-ring: var(--ring);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+}
+
+:root {
+  --background: #ffffff;
+  --foreground: #0f172a;
+  --primary: #4f46e5;
+  --primary-foreground: #ffffff;
+  --muted: #f1f5f9;
+  --muted-foreground: #64748b;
+  --border: #e2e8f0;
+  --card: #ffffff;
+  --card-foreground: #0f172a;
+  --accent: #f1f5f9;
+  --ring: #4f46e5;
+  --radius: 0.75rem;
+}
+
+.dark {
+  --background: #0a0a0a;
+  --foreground: #f1f5f9;
+  --primary: #818cf8;
+  --primary-foreground: #0a0a0a;
+  --muted: #1e293b;
+  --muted-foreground: #94a3b8;
+  --border: #1e293b;
+  --card: #111111;
+  --card-foreground: #f1f5f9;
+  --accent: #1e293b;
+  --ring: #818cf8;
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    font-size: 18px;
+    line-height: 1.75;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  h1, h2, h3, h4 {
+    font-family: var(--font-serif);
+    letter-spacing: -0.02em;
+  }
+  /* Smooth theme transition */
+  html {
+    transition: background-color 0.3s ease;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Article body — prose tweaks, drop cap, code blocks, syntax
+   highlighting (theme-aware, no external hljs stylesheet needed)
+   ───────────────────────────────────────────────────────────── */
+.article-body {
+  --tw-prose-body: var(--color-foreground);
+  --tw-prose-headings: var(--color-foreground);
+  --tw-prose-links: var(--color-primary);
+  --tw-prose-bold: var(--color-foreground);
+  --tw-prose-quotes: var(--color-muted-foreground);
+  --tw-prose-quote-borders: var(--color-primary);
+  --tw-prose-code: var(--color-foreground);
+  font-size: 1.125rem;
+  line-height: 1.8;
+}
+
+.article-body :is(h2, h3, h4) {
+  font-family: var(--font-serif);
+  scroll-margin-top: 6rem; /* offset sticky header for anchor jumps */
+}
+
+/* Drop cap on the first paragraph */
+.article-body > p:first-of-type::first-letter {
+  float: left;
+  font-family: var(--font-serif);
+  font-size: 3.5rem;
+  line-height: 0.8;
+  font-weight: 700;
+  padding: 0.1em 0.1em 0 0;
+  color: var(--color-primary);
+}
+
+.article-body :not(pre) > code {
+  background: var(--color-muted);
+  padding: 0.15em 0.4em;
+  border-radius: 0.35rem;
+  font-size: 0.875em;
+  font-family: var(--font-mono);
+}
+.article-body :not(pre) > code::before,
+.article-body :not(pre) > code::after {
+  content: none; /* remove prose backtick quotes */
+}
+
+.article-body pre {
+  background: #0d1117;
+  color: #e6edf3;
+  border: 1px solid var(--color-border);
+  border-radius: 0.75rem;
+  padding: 1.25rem 1.5rem;
+  overflow-x: auto;
+  font-size: 0.9rem;
+  font-family: var(--font-mono);
+}
+.article-body pre code {
+  background: transparent;
+  padding: 0;
+  font-size: inherit;
+}
+
+/* highlight.js token palette (GitHub dark — code blocks are always dark) */
+.hljs-comment,
+.hljs-quote {
+  color: #8b949e;
+  font-style: italic;
+}
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-literal,
+.hljs-type {
+  color: #ff7b72;
+}
+.hljs-string,
+.hljs-attr,
+.hljs-template-tag,
+.hljs-addition {
+  color: #a5d6ff;
+}
+.hljs-title,
+.hljs-title.function_,
+.hljs-section {
+  color: #d2a8ff;
+}
+.hljs-number,
+.hljs-symbol,
+.hljs-meta {
+  color: #79c0ff;
+}
+.hljs-name,
+.hljs-attribute {
+  color: #7ee787;
+}
+.hljs-built_in,
+.hljs-class .hljs-title {
+  color: #ffa657;
+}
+.hljs-deletion {
+  color: #ffdcd7;
+}
+
+/* Prose tokens for legal/static pages (no drop cap) */
+.doc-prose {
+  --tw-prose-body: var(--color-foreground);
+  --tw-prose-headings: var(--color-foreground);
+  --tw-prose-links: var(--color-primary);
+  --tw-prose-bold: var(--color-foreground);
+  --tw-prose-bullets: var(--color-muted-foreground);
+  --tw-prose-counters: var(--color-muted-foreground);
+  --tw-prose-quotes: var(--color-muted-foreground);
+  --tw-prose-quote-borders: var(--color-border);
+  --tw-prose-hr: var(--color-border);
+}
+.doc-prose :is(h2, h3) {
+  font-family: var(--font-serif);
+  scroll-margin-top: 6rem;
+}
